@@ -1,5 +1,6 @@
 /*global module:false*/
 module.exports = function(grunt) {
+    'use strict';
 
     var SPACE_NAME = 'NameHere';
     var EXT_JS = '.js';
@@ -8,10 +9,10 @@ module.exports = function(grunt) {
     var FILE_NAME_OUT_MIN = SPACE_NAME + EXT_JS_MIN;
     var FILE_NAME_ENTRY = SPACE_NAME;
 
-    grunt.loadNpmTasks("grunt-contrib-requirejs");
-    grunt.loadNpmTasks("grunt-contrib-uglify");
-    grunt.loadNpmTasks("grunt-bumpup");
-    grunt.loadNpmTasks("grunt-tagrelease");
+    grunt.loadNpmTasks('grunt-contrib-requirejs');
+    grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-bumpup');
+    grunt.loadNpmTasks('grunt-tagrelease');
 
     grunt.config.init({
         requirejs : {
@@ -23,21 +24,21 @@ module.exports = function(grunt) {
                     out: FILE_NAME_OUT_MAX,
                     wrap: {
                         start: 
-                            "(function() { \n" + 
-                            "var global = new Function('return this')();" + 
-                            "var myDefine = (function(factory){ " + 
-                                "var ret = factory();" +
-                                "typeof module != 'undefined' && (module.exports = ret);" +
-                                "(function(define){define && define(function(){return ret;});})(global.define);" +
-                                "global." + SPACE_NAME + " = ret; });",
+                            '(function() { \n' + 
+                            'var global = new Function(\'return this\')();' + 
+                            'var myDefine = (function(factory){ ' + 
+                                'var ret = factory();' +
+                                'typeof module != \'undefined\' && (module.exports = ret);' +
+                                '(function(define){define && define(function(){return ret;});})(global.define);' +
+                                'global.' + SPACE_NAME + ' = ret; });',
                         end: 
-                            "myDefine(function() { return require('" + SPACE_NAME + "'); }); \n" + 
-                            "}());"
+                            'myDefine(function() { return require(' + SPACE_NAME + '); }); \n' + 
+                            '}());'
                     },
                     pragmas: {
                         release: true
                     },
-                    optimize : "none"
+                    optimize : 'none'
                 }
             }
         },
@@ -59,13 +60,13 @@ module.exports = function(grunt) {
         }
     });
 
-    grunt.registerTask("dist", "requirejs:dist uglify".split(' '));
-    grunt.registerTask("default", "dist".split(' '));
-    grunt.registerTask("release", function (type) {
+    grunt.registerTask('dist', 'requirejs:dist uglify'.split(' '));
+    grunt.registerTask('default', 'dist'.split(' '));
+    grunt.registerTask('release', function (type) {
 
         grunt.task.run('dist');
         
-        if (type != null && type != false){
+        if (type != null && type !== ''){
             grunt.task.run('bumpup:' + type);
             grunt.task.run('tagrelease');
         }
